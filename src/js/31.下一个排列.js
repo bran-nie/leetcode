@@ -13,59 +13,35 @@ var nextPermutation = function (nums) {
     const swap = (nums, l, r) => {
         [nums[l], nums[r]] = [nums[r], nums[l]];
     };
+    const reverse = (nums, start, end) => {
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    };
     /**
-     * 1. min max 下标指针
-     * 2. 当 max 不是 0 时，即排列不是最大的，则将 max 左边的与 min 置换，
-     * 3. 从 max 开始则从小到大排序
+     * 1. left right 下标指针
+     * 2. 当 left 不是 0 时，即排列不是最大的，则将 left 与 right 置换，
+     * 3. 从 left 的右边开始则从小到大排序
      */
-    let p = nums.length - 1;
-    let max = nums.length - 1,
-        min = nums.length - 1;
-    while (max > 0) {
-        min = nums[min] < nums[max] ? min : max;
-        // 如果左边比右边的大
-        if (nums[max] > nums[max - 1]) {
-            break;
-        } else {
-            max--;
-        }
+    let left = nums.length - 2,
+        right = nums.length - 1;
+    // 从左到右一次遍历，找到终止升序的元素，如 [2,5,4,3,1] 中的 2
+    while (left >= 0 && nums[left] >= nums[left + 1]) {
+        left--;
     }
-    console.log({ max, min });
-    // 已经是最大的排列
-    if (max === 0 && min === nums.length - 1) {
-        nums.reverse();
-    } else {
-        // 只需要互换最后两个
-        if (max === min && max !== 0) {
-            swap(nums, max - 1, min);
+    // 如果 left 不是 -1，即原排列不是最大排列
+    if (left >= 0) {
+        while (left < right && nums[left] >= nums[right]) {
+            right--;
         }
-        if (max !== min && max !== 0) {
-            if (nums[min] > nums[max - 1]) {
-                swap(nums, max - 1, min);
-                while (max < min) {
-                    swap(nums, max, min);
-                    max++;
-                    min--;
-                }
-            } else {
-                let _min = min;
-                while (_min > max) {
-                    if (nums[max - 1] >= nums[_min]) {
-                        _min--;
-                    } else {
-                        break;
-                    }
-                }
-                console.log({ _min });
-                swap(nums, max - 1, _min);
-                while (max < min) {
-                    swap(nums, min, max);
-                    max++;
-                    min--;
-                }
-            }
-        }
+        console.log({ left, right });
+        swap(nums, left, right);
     }
+
+    reverse(nums, left + 1, nums.length - 1);
+
     console.log(nums);
 };
 // @lc code=end
