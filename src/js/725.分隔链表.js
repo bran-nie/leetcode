@@ -56,3 +56,29 @@ var splitListToParts = function (head, k) {
     return ans;
 };
 // @lc code=end
+
+// 题解的答案，思路一样的，代码更优雅。
+var splitListToParts = function (head, k) {
+    let n = 0;
+    let temp = head;
+    while (temp != null) {
+        n++;
+        temp = temp.next;
+    }
+    let quotient = Math.floor(n / k),
+        remainder = n % k;
+
+    const parts = new Array(k).fill(null);
+    let curr = head;
+    for (let i = 0; i < k && curr != null; i++) {
+        parts[i] = curr;
+        let partSize = quotient + (i < remainder ? 1 : 0);
+        for (let j = 1; j < partSize; j++) {
+            curr = curr.next;
+        }
+        const next = curr.next;
+        curr.next = null;
+        curr = next;
+    }
+    return parts;
+};
